@@ -8,7 +8,8 @@ color_names = ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan']
 def test_named_colors():
     for i in color_names:
         print getattr(color, i)(i) + color.red('compare')
-        print color.black(getattr(color, i + '_bg')(i)) + color.red('compare')
+        print color.black(getattr(color, i + '_bg')(i + '_bg')) + color.red('compare')
+        print getattr(color, i + '_hl')(i + '_hl') + color.red('compare')
 
 
 def test_decorations():

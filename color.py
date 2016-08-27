@@ -146,6 +146,17 @@ magenta_bg = make_color(esc(45), END)
 cyan_bg = make_color(esc(46), END)
 white_bg = make_color(esc(47), END)
 
+HL_END = esc(22, 27, 39)
+
+black_hl = make_color(esc(1, 30, 7), HL_END)
+red_hl = make_color(esc(1, 31, 7), HL_END)
+green_hl = make_color(esc(1, 32, 7), HL_END)
+yellow_hl = make_color(esc(1, 33, 7), HL_END)
+blue_hl = make_color(esc(1, 34, 7), HL_END)
+magenta_hl = make_color(esc(1, 35, 7), HL_END)
+cyan_hl = make_color(esc(1, 36, 7), HL_END)
+white_hl = make_color(esc(1, 37, 7), HL_END)
+
 # From http://askubuntu.com/a/528938/136672 , end = 0 is OK
 bold = make_color(esc(1), esc(22))
 italic = make_color(esc(3), esc(23))
