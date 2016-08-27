@@ -1,4 +1,93 @@
 # coding: utf-8
+"""
+color.py
+========
+
+Usage
+-----
+
+>>> import color
+>>>
+>>> # 8-bit color
+>>> print red('red') + green('green') + blue('blue')
+>>> print bold(yellow('bold yellow')) + underline(cyan('underline cyan'))
+>>> print magenta_hl('magenta highlight')
+>>>
+>>> # xterm 256 color
+>>> print bg256('A9D5DE', fg256('276F86', 'Info!'))
+>>> print bg256('E0B4B4', fg256('912D2B', 'Warning!'))
+>>> print hl256('10a3a3', 'Teal')
+
+Note:
+
+1. Every color function receives and returns string/unicode, so that the result
+   could be used with any other strings, in any string formatting situation.
+
+2. If you pass a str type string, the color function will return a str.
+   If you pass a unicode type string, the color function will return a unicode.
+
+3. Color functions could be composed together, like put ``red`` into ``bold``,
+   or put ``bg256`` into ``fg256``. ``xxx_hl`` and ``hl256`` are mostly used
+   independently.
+
+API
+---
+
+8-bit colors:
+
+========  ============  ===========
+ Colors    Background    Highlight
+========  ============  ===========
+black     black_bg      black_hl
+red       red_bg        red_hl
+green     green_bg      green_hl
+yellow    yellow_bg     yellow_hl
+blue      blue_bg       blue_hl
+magenta   magenta_bg    magenta_hl
+cyan      cyan_bg       cyan_hl
+white     white_bg      white_hl
+========  ============  ===========
+
+Styles:
+- bold
+- italic
+- underline
+- strike
+- blink
+
+.. py:function:: <color_function>(s)
+
+   Decorate string with specified color or style.
+
+   A color function with ``_bg`` suffix means it will set color as background.
+   A color function with ``_hl`` suffix means it will set color as background,
+   and change the foreground as well to make the word standout.
+
+   :param str s: The input string (or unicode)
+   :return: The decorated string (or unicode)
+   :rtype: string, unicode
+   :raises ValueError: if the message_body exceeds 160 characters
+
+
+256 colors:
+- fg256
+- bg256
+- hl256
+
+.. py:function:: <256_color_function>(hexrgb, s)
+
+   Decorate string with specified hex rgb color
+
+   ``fg256`` will set color as foreground.
+   ``bg256`` will set color as background.
+   ``hg256`` will highlight input with the color.
+
+   :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
+   :param str s: The input string (or unicode)
+   :return: The decorated string (or unicode)
+   :rtype: string, unicode
+   :raises ValueError: If the input string's length not equal to 3 or 6.
+"""
 
 ###############################################################################
 # 8 bit Color
@@ -69,7 +158,7 @@ blink = make_color(esc(5), esc(25))
 # Xterm 256 Color (delete if you don't need)
 ###############################################################################
 #
-# Code from: https://gist.github.com/MicahElliott/719710
+# Rewrite from: https://gist.github.com/MicahElliott/719710
 
 import re  # NOQA
 

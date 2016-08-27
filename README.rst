@@ -4,11 +4,10 @@ Python Terminal Color
 Introduction
 ------------
 
-1. This is a drop-in library for print colorized output in termianl.
+1. This is a drop-in library for print colorized output in terminal.
 2. It has no pypi package, which means you can't install it through pip.
-3. It is recommended to be copied to your own project as a submodule so that
-   no dependency will be involved.
-4. The reason why 
+3. It is recommended to be used as a submodule of your own project,
+   so that no dependency will be involved.
 
 
 Usage
@@ -47,9 +46,8 @@ Note:
 API
 ---
 
-
-``<color_function>(s)``
-~~~~~~~~~~~~~~~~~~~~~~~
+function ``<color_function>(s)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Decorate string with specified color.
 
@@ -79,8 +77,8 @@ Parameters:
 :rtype: string, unicode
 :raises ValueError: if the message_body exceeds 160 characters
 
-``<style_function>(s)``
-~~~~~~~~~~~~~~~~~~~~~~~
+function ``<style_function>(s)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Decorate string with specified style.
 
@@ -95,8 +93,8 @@ Decorate string with specified style.
 Arguments and return are the same as ``color_function``.
 
 
-``<256_color_function>(hexrgb, s)``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function ``<256_color_function>(hexrgb, s)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Decorate string with specified hex rgb color
 
