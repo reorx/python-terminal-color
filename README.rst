@@ -74,10 +74,10 @@ and change the foreground as well to make the word standout.
 
 Parameters:
 
-- :param str s: The input string (or unicode)
-- :return: The decorated string (or unicode)
-- :rtype: string, unicode
-- :raises ValueError: if the message_body exceeds 160 characters
+:param str s: The input string (or unicode)
+:return: The decorated string (or unicode)
+:rtype: string, unicode
+:raises ValueError: if the message_body exceeds 160 characters
 
 ``<style_function>(s)``
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,8 +108,8 @@ Decorate string with specified hex rgb color
 
 Parameters:
 
-- :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
-- :param str s: The input string (or unicode)
-- :return: The decorated string (or unicode)
-- :rtype: string, unicode
-- :raises ValueError: If the input string's length not equal to 3 or 6.
+:param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
+:param str s: The input string (or unicode)
+:return: The decorated string (or unicode)
+:rtype: string, unicode
+:raises ValueError: If the input string's length not equal to 3 or 6.
