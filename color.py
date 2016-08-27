@@ -166,3 +166,4 @@ def make_256(start, end):
 
 fg256 = make_256(esc(38, 5, '{x}'), esc(39))
 bg256 = make_256(esc(48, 5, '{x}'), esc(49))
+hl256 = make_256(esc(1, 38, 5, '{x}', 7), esc(27, 39, 22))
