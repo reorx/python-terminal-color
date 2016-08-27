@@ -1,25 +1,8 @@
 # coding: utf-8
 
-#red
-#green
-#blue
-#yellow
-#magenta
-#cyan
-#black
-#white
-#gray
-
-#_bg
-
-#fg256
-#bg256
-
-#bold
-#italic
-#underline
-
-import re
+###############################################################################
+# 8 bit Color
+###############################################################################
 
 
 def esc(*codes):
@@ -65,6 +48,15 @@ magenta = make_color(esc(35), END)
 cyan = make_color(esc(36), END)
 white = make_color(esc(37), END)
 
+black_bg = make_color(esc(40), END)
+red_bg = make_color(esc(41), END)
+green_bg = make_color(esc(42), END)
+yellow_bg = make_color(esc(43), END)
+blue_bg = make_color(esc(44), END)
+magenta_bg = make_color(esc(45), END)
+cyan_bg = make_color(esc(46), END)
+white_bg = make_color(esc(47), END)
+
 # From http://askubuntu.com/a/528938/136672 , end = 0 is OK
 bold = make_color(esc(1), esc(22))
 italic = make_color(esc(3), esc(23))
@@ -78,6 +70,8 @@ blink = make_color(esc(5), esc(25))
 ###############################################################################
 #
 # Code from: https://gist.github.com/MicahElliott/719710
+
+import re  # NOQA
 
 # Default color levels for the color cube
 CUBELEVELS = [0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff]
