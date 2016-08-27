@@ -47,7 +47,13 @@ Note:
 API
 ---
 
-8-bit colors:
+
+``<color_function>(s)``
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Decorate string with specified color.
+
+``color_function`` is one of below function names:
 
 ========  ============  ===========
  Colors    Background    Highlight
@@ -62,42 +68,48 @@ cyan      cyan_bg       cyan_hl
 white     white_bg      white_hl
 ========  ============  ===========
 
-Styles:
+A color function with ``_bg`` suffix means it will set color as background.
+A color function with ``_hl`` suffix means it will set color as background,
+and change the foreground as well to make the word standout.
+
+Parameters:
+
+- :param str s: The input string (or unicode)
+- :return: The decorated string (or unicode)
+- :rtype: string, unicode
+- :raises ValueError: if the message_body exceeds 160 characters
+
+``<style_function>(s)``
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Decorate string with specified style.
+
+``style_function`` is one of below function names:
+
 - bold
 - italic
 - underline
 - strike
 - blink
 
-.. py:function:: <color_function>(s)
-
-   Decorate string with specified color or style.
-
-   A color function with ``_bg`` suffix means it will set color as background.
-   A color function with ``_hl`` suffix means it will set color as background,
-   and change the foreground as well to make the word standout.
-
-   :param str s: The input string (or unicode)
-   :return: The decorated string (or unicode)
-   :rtype: string, unicode
-   :raises ValueError: if the message_body exceeds 160 characters
+Arguments and return are the same as ``color_function``.
 
 
-256 colors:
-- fg256
-- bg256
-- hl256
+``<256_color_function>(hexrgb, s)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. py:function:: <256_color_function>(hexrgb, s)
+Decorate string with specified hex rgb color
 
-   Decorate string with specified hex rgb color
+``256_color_function`` is one of below function names:
 
-   ``fg256`` will set color as foreground.
-   ``bg256`` will set color as background.
-   ``hg256`` will highlight input with the color.
+- fg256: will set color as foreground.
+- bg256: will set color as background.
+- hl256: will highlight input with the color.
 
-   :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
-   :param str s: The input string (or unicode)
-   :return: The decorated string (or unicode)
-   :rtype: string, unicode
-   :raises ValueError: If the input string's length not equal to 3 or 6.
+Parameters:
+
+- :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
+- :param str s: The input string (or unicode)
+- :return: The decorated string (or unicode)
+- :rtype: string, unicode
+- :raises ValueError: If the input string's length not equal to 3 or 6.
