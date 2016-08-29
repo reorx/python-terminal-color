@@ -89,9 +89,23 @@ Styles:
    :raises ValueError: If the input string's length not equal to 3 or 6.
 """
 
-###############################################################################
-# 8 bit Color
-###############################################################################
+import sys
+
+
+_use_color_no_tty = True
+
+
+def use_color_no_tty(flag):
+    global _use_color_no_tty
+    _use_color_no_tty = flag
+
+
+def use_color():
+    if sys.stdout.isatty():
+        return True
+    if _use_color_no_tty:
+        return True
+    return False
 
 
 def esc(*codes):
@@ -109,8 +123,15 @@ def to_unicode(s):
     return s, utf8
 
 
+###############################################################################
+# 8 bit Color
+###############################################################################
+
 def make_color(start, end):
     def color_func(s):
+        if not use_color():
+            return s
+
         s, utf8 = to_unicode(s)
 
         # render
@@ -215,6 +236,7 @@ def get_closest(v, l):
     return min(l, key=lambda x: abs(x - v))
 
 
+# TODO cache result
 def rgb_to_xterm(r, g, b):
     """ Converts RGB values to the nearest equivalent xterm-256 color.
     """
@@ -228,6 +250,7 @@ def rgb_to_xterm(r, g, b):
     return r * 36 + g * 6 + b + 16
 
 
+# TODO cache result
 def hex_to_rgb(hx):
     hxlen = len(hx)
     if hxlen != 3 and hxlen != 6:
@@ -240,6 +263,9 @@ def hex_to_rgb(hx):
 
 def make_256(start, end):
     def rgb_func(hx, s):
+        if not use_color():
+            return s
+
         s, utf8 = to_unicode(s)
 
         # render
