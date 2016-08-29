@@ -236,7 +236,37 @@ def get_closest(v, l):
     return min(l, key=lambda x: abs(x - v))
 
 
-# TODO cache result
+class Memorize(dict):
+    def __init__(self, func):
+        self.func = func
+        self.__doc__ = func.__doc__
+
+    def __call__(self, *args):
+        return self[args]
+
+    def __missing__(self, key):
+        result = self[key] = self.func(*key)
+        return result
+
+
+def memorize(func):
+    func._cache = {}
+
+    def wrapper(*args, **kwargs):
+        if kwargs:
+            return func(*args, **kwargs)
+        if args not in func._cache:
+            func._cache[args] = func(*args, **kwargs)
+        return func._cache[args]
+
+    for i in ('__module__', '__name__', '__doc__'):
+        setattr(wrapper, i, getattr(func, i))
+    wrapper.__dict__.update(getattr(func, '__dict__', {}))
+    wrapper._origin = func
+    return wrapper
+
+
+@memorize
 def rgb_to_xterm(r, g, b):
     """ Converts RGB values to the nearest equivalent xterm-256 color.
     """
@@ -250,7 +280,7 @@ def rgb_to_xterm(r, g, b):
     return r * 36 + g * 6 + b + 16
 
 
-# TODO cache result
+@memorize
 def hex_to_rgb(hx):
     hxlen = len(hx)
     if hxlen != 3 and hxlen != 6:
