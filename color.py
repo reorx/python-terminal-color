@@ -145,8 +145,8 @@ def make_color(start, end):
 
 
 # According to https://en.wikipedia.org/wiki/ANSI_escape_code#graphics ,
-# end seems could be both 0 and 39
-#END = esc(39)
+# 39 is reset for foreground, 49 is reset for background, for convenience,
+# we can just use 0 to reset all
 END = esc(0)
 
 black = make_color(esc(30), END)
@@ -167,7 +167,8 @@ magenta_bg = make_color(esc(45), END)
 cyan_bg = make_color(esc(46), END)
 white_bg = make_color(esc(47), END)
 
-HL_END = esc(22, 27, 39)
+#HL_END = esc(22, 27, 39)
+HL_END = esc(22, 27, 0)
 
 black_hl = make_color(esc(1, 30, 7), HL_END)
 red_hl = make_color(esc(1, 31, 7), HL_END)
@@ -292,14 +293,19 @@ def hex_to_rgb(hx):
 
 
 def make_256(start, end):
-    def rgb_func(hx, s):
+    def rgb_func(rgb, s):
         if not use_color():
             return s
 
         s, utf8 = to_unicode(s)
 
         # render
-        rgb = hex_to_rgb(hx)
+        if isinstance(rgb, tuple):
+            pass
+        elif isinstance(rgb, str):
+            rgb = hex_to_rgb(rgb)
+        else:
+            raise ValueError('rgb should be either tuple or str')
         xcolor = rgb_to_xterm(*rgb)
 
         tpl = start + u'{s}' + end
