@@ -16,3 +16,5 @@ cyan = make_color(36)
 
 bold = make_color(1)
 underline = make_color(4)
+
+grayscale = {(i - 232): make_color('38;5;' + str(i)) for i in xrange(232, 256)}
