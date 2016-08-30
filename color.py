@@ -324,3 +324,8 @@ def make_256(start, end):
 fg256 = make_256(esc(38, 5, '{x}'), esc(39))
 bg256 = make_256(esc(48, 5, '{x}'), esc(49))
 hl256 = make_256(esc(1, 38, 5, '{x}', 7), esc(27, 39, 22))
+
+_grayscale_xterm_codes = [int(i) for i, _ in _GRAYSCALE]
+grayscale = {(i - _grayscale_xterm_codes[0]): make_color(esc(38, 5, i), esc(39)) for i in _grayscale_xterm_codes}
+grayscale_bg = {(i - _grayscale_xterm_codes[0]): make_color(esc(48, 5, i), esc(49)) for i in _grayscale_xterm_codes}
+grayscale_hl = {(i - _grayscale_xterm_codes[0]): make_color(esc(1, 38, 5, i, 7), esc(27, 39, 22)) for i in _grayscale_xterm_codes}
