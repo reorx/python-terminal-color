@@ -294,7 +294,7 @@ def hex_to_rgb(hx):
 
 
 def make_256(start, end):
-    def rgb_func(rgb, s):
+    def rgb_func(rgb, s, x=None):
         if not use_color():
             return s
 
@@ -307,7 +307,10 @@ def make_256(start, end):
             rgb = hex_to_rgb(rgb)
         else:
             raise ValueError('rgb should be either tuple or str')
-        xcolor = rgb_to_xterm(*rgb)
+        if x is not None:
+            xcolor = x
+        else:
+            xcolor = rgb_to_xterm(*rgb)
 
         tpl = start + u'{s}' + end
         f = tpl.format(
