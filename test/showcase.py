@@ -31,6 +31,10 @@ if __name__ == '__main__':
         )
     print
 
+    s = ''.join(color.grayscale_bg[i](' ') for i in color.grayscale_bg)
+    print 'grayscale_bg() {}'.format(s)
+    print
+
     print '                 bg256(hex, s)'
     clut = CLUT[16:-24]
     rl = 6
