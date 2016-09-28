@@ -1,7 +1,7 @@
 Python Terminal Color
 =====================
 
-![screenshot](screenshot.png)
+.. image:: screenshot.png
 
 Introduction
 ------------
