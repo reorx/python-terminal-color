@@ -217,38 +217,38 @@ import re  # NOQA
 CUBELEVELS = [0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff]
 
 # Generate a list of midpoints of the above list
-SNAPS = [(x + y) / 2 for x, y in zip(CUBELEVELS, [0] + CUBELEVELS)[1:]]
+SNAPS = [(x + y) / 2 for x, y in list(zip(CUBELEVELS, [0] + CUBELEVELS))[1:]]
 
 # Gray-scale range.
 _GRAYSCALE = [
-    ('232', '080808'),
-    ('233', '121212'),
-    ('234', '1c1c1c'),
-    ('235', '262626'),
-    ('236', '303030'),
-    ('237', '3a3a3a'),
-    ('238', '444444'),
-    ('239', '4e4e4e'),
-    ('240', '585858'),
-    ('241', '626262'),
-    ('242', '6c6c6c'),
-    ('243', '767676'),
-    ('244', '808080'),
-    ('245', '8a8a8a'),
-    ('246', '949494'),
-    ('247', '9e9e9e'),
-    ('248', 'a8a8a8'),
-    ('249', 'b2b2b2'),
-    ('250', 'bcbcbc'),
-    ('251', 'c6c6c6'),
-    ('252', 'd0d0d0'),
-    ('253', 'dadada'),
-    ('254', 'e4e4e4'),
-    ('255', 'eeeeee'),
+    (0x08, 232),  # 0x08 means 080808 in HEX color
+    (0x12, 233),
+    (0x1c, 234),
+    (0x26, 235),
+    (0x30, 236),
+    (0x3a, 237),
+    (0x44, 238),
+    (0x4e, 239),
+    (0x58, 240),
+    (0x62, 241),
+    (0x6c, 242),
+    (0x76, 243),
+    (0x80, 244),
+    (0x8a, 245),
+    (0x94, 246),
+    (0x9e, 247),
+    (0xa8, 248),
+    (0xb2, 249),
+    (0xbc, 250),
+    (0xc6, 251),
+    (0xd0, 252),
+    (0xda, 253),
+    (0xe4, 254),
+    (0xee, 255),
 ]
+GRAYSCALE = dict(_GRAYSCALE)
 
-GRAYSCALE = {int(b[:2], 16): a for a, b in _GRAYSCALE}
-GRAYSCALE_POINTS = GRAYSCALE.keys()
+GRAYSCALE_POINTS = [i for i, _ in _GRAYSCALE]
 
 
 def get_closest(v, l):
@@ -346,7 +346,7 @@ fg256 = make_256(esc(38, 5, t_('{x}')), esc(39))
 bg256 = make_256(esc(48, 5, t_('{x}')), esc(49))
 hl256 = make_256(esc(1, 38, 5, t_('{x}'), 7), esc(27, 39, 22))
 
-_grayscale_xterm_codes = [int(i) for i, _ in _GRAYSCALE]
+_grayscale_xterm_codes = [i for _, i in _GRAYSCALE]
 grayscale = {(i - _grayscale_xterm_codes[0]): make_color(esc(38, 5, i), esc(39)) for i in _grayscale_xterm_codes}
 grayscale_bg = {(i - _grayscale_xterm_codes[0]): make_color(esc(48, 5, i), esc(49)) for i in _grayscale_xterm_codes}
 grayscale_hl = {(i - _grayscale_xterm_codes[0]): make_color(esc(1, 38, 5, i, 7), esc(27, 39, 22)) for i in _grayscale_xterm_codes}
