@@ -21,7 +21,7 @@ def test_decorations():
 
 
 def test_256_colors():
-    for i in (range(10) + ['a', 'b', 'c', 'd', 'e', 'f']):
+    for i in (list(range(10)) + ['a', 'b', 'c', 'd', 'e', 'f']):
         hex = str(i) * 3
         print(color.fg256(hex, hex), color.bg256(hex, hex), color.hl256(hex, hex))
 

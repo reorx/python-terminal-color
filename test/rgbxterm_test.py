@@ -281,7 +281,7 @@ def test_rgb_to_xterm():
         r, g, b = hex_to_rgb(hex)
         term = rgb_to_xterm(r, g, b)
         print(
-            t_('RGB %s%s -> xterm color \033[38;5;%sm%s (%s) \033[0m').format(
+            t_('RGB {}{} -> xterm color \033[38;5;{}m{} ({}) \033[0m').format(
                 hex, [r, g, b], term, term, v
             )
         )
