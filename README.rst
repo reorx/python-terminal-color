@@ -10,6 +10,7 @@ Introduction
 2. It has no pypi package, which means you can't install it through pip.
 3. It is recommended to be used as a submodule of your own project,
    so that no dependency will be involved.
+4. ``color.py`` is Python 3 only and recommended to choose; ``color_compat.py`` is Python 2/3 compatible, only use it if you still struggle in the Python 2 morass.
 
 
 Usage
@@ -22,23 +23,23 @@ Copy the ``color.py`` file to your project, then:
     from yourproject import color
 
     # 8 bit color
-    print color.red('red') + color.green('green') + color.blue('blue')
-    print color.bold(color.yellow('bold yellow')) + color.underline(color.cyan('underline cyan'))
-    print color.magenta_hl('magenta highlight')
+    print(color.red('red') + color.green('green') + color.blue('blue'))
+    print(color.bold(color.yellow('bold yellow')) + color.underline(color.cyan('underline cyan')))
+    print(color.magenta_hl('magenta highlight'))
 
     # xterm 256 color
-    print color.bg256('A9D5DE', color.fg256('276F86', 'Info!'))
-    print color.bg256('E0B4B4', color.fg256('912D2B', 'Warning!'))
-    print color.hl256('10a3a3', 'Teal')
+    print(color.bg256('A9D5DE', color.fg256('276F86', 'Info!')))
+    print(color.bg256('E0B4B4', color.fg256('912D2B', 'Warning!')))
+    print(color.hl256('10a3a3', 'Teal'))
 
 
 Note:
 
-1. Every color function receives and returns string/unicode, so that the result
+1. Every color function receives and returns string, so that the result
    could be used with any other strings, in any string formatting situation.
 
 2. If you pass a str type string, the color function will return a str.
-   If you pass a unicode type string, the color function will return a unicode.
+   If you pass a bytes type string, the color function will return a bytes.
 
 3. Color functions could be composed together, like put ``red`` into ``bold``,
    or put ``bg256`` into ``fg256``. ``xxx_hl`` and ``hl256`` are mostly used
@@ -74,9 +75,9 @@ and change the foreground as well to make the word standout.
 
 Parameters:
 
-:param str s: The input string (or unicode)
-:return: The decorated string (or unicode)
-:rtype: string, unicode
+:param str s: The input string
+:return: The decorated string
+:rtype: string
 :raises ValueError: if the message_body exceeds 160 characters
 
 function ``<style_function>(s)``
@@ -109,7 +110,7 @@ Decorate string with specified hex rgb color
 Parameters:
 
 :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
-:param str s: The input string (or unicode)
-:return: The decorated string (or unicode)
-:rtype: string, unicode
+:param str s: The input string
+:return: The decorated string
+:rtype: string
 :raises ValueError: If the input string's length not equal to 3 or 6.

@@ -1,8 +1,10 @@
 # coding: utf-8
 
+from __future__ import print_function
 import re
 import sys
-from color import rgb_to_xterm, hex_to_rgb
+from color import rgb_to_xterm, hex_to_rgb, t_
+
 
 CLUT = [  # color look-up table
     # 8-bit, RGB hex
@@ -275,6 +277,11 @@ CLUT = [  # color look-up table
 
 def test_rgb_to_xterm():
     for v, hex in CLUT:
+        v, hex = t_(v), t_(hex)
         r, g, b = hex_to_rgb(hex)
         term = rgb_to_xterm(r, g, b)
-        print 'RGB %s%s -> xterm color \033[38;5;%sm%s (%s) \033[0m' % (hex, [r, g, b], term, term, v)
+        print(
+            t_('RGB {}{} -> xterm color \033[38;5;{}m{} ({}) \033[0m').format(
+                hex, [r, g, b], term, term, v
+            )
+        )
