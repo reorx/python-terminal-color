@@ -108,7 +108,7 @@ def use_color():
     return False
 
 
-def esc(*codes: str) -> str:
+def esc(*codes: Union[int, str]) -> str:
     """Produces an ANSI escape code from a list of integers
     :rtype: text_type
     """
@@ -133,10 +133,8 @@ def b_(t: Union[str, Any]) -> bytes:
 # 8 bit Color
 ###############################################################################
 
-def make_color(start: str, end: str) -> Callable[[str], str]:
-    # type: (Text, Text) -> Callable
-    def color_func(s):
-        # type: (AnyStr) -> Text
+def make_color(start, end: str) -> Callable[[str], str]:
+    def color_func(s: str) -> str:
         if not use_color():
             return s
 
@@ -202,7 +200,7 @@ import re  # NOQA
 CUBELEVELS: List[int] = [0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff]
 
 # Generate a list of midpoints of the above list
-SNAPS: List[int] = [(x + y) / 2 for x, y in list(zip(CUBELEVELS, [0] + CUBELEVELS))[1:]]
+SNAPS: List[int] = [(x + y) // 2 for x, y in list(zip(CUBELEVELS, [0] + CUBELEVELS))[1:]]
 
 # Gray-scale range.
 _GRAYSCALE = [
@@ -253,7 +251,7 @@ class Memorize(dict):
         return result
 
 
-def memorize(func: Callable) -> Callable:
+def memorize(func) -> Callable:
     func._cache = {}
 
     def wrapper(*args, **kwargs):
@@ -265,8 +263,8 @@ def memorize(func: Callable) -> Callable:
 
     for i in ('__module__', '__name__', '__doc__'):
         setattr(wrapper, i, getattr(func, i))
-    wrapper.__dict__.update(getattr(func, '__dict__', {}))
-    wrapper._origin = func
+    wrapper.__dict__.update(getattr(func, '__dict__', {}))  # type: ignore
+    wrapper._origin = func  # type: ignore
     return wrapper
 
 
@@ -292,7 +290,7 @@ def hex_to_rgb(hx: str) -> Tuple[int, int, int]:
     if hxlen == 3:
         hx = t_('').join(i * 2 for i in hx)
     parts = [int(h, 16) for h in re.split(t_(r'(..)(..)(..)'), hx)[1:4]]
-    return tuple(parts)
+    return tuple(parts)  # type: ignore
 
 
 def make_256(start: str, end: str) -> Callable[[Union[tuple, str], str, Optional[Tuple[int, int, int]]], str]:

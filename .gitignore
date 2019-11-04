@@ -21,3 +21,4 @@ docs/_build/
 htmlcov/
 .coverage
 .python-version
+.mypy_cache/
