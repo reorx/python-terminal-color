@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 color.py
 ========
@@ -20,11 +19,11 @@ Usage
 
 Note:
 
-1. Every color function receives and returns string/unicode, so that the result
+1. Every color function receives and returns string, so that the result
    could be used with any other strings, in any string formatting situation.
 
 2. If you pass a str type string, the color function will return a str.
-   If you pass a unicode type string, the color function will return a unicode.
+   If you pass a bytes type string, the color function will return a bytes string.
 
 3. Color functions could be composed together, like put ``red`` into ``bold``,
    or put ``bg256`` into ``fg256``. ``xxx_hl`` and ``hl256`` are mostly used
@@ -63,9 +62,9 @@ Styles:
    A color function with ``_hl`` suffix means it will set color as background,
    and change the foreground as well to make the word standout.
 
-   :param str s: The input string (or unicode)
-   :return: The decorated string (or unicode)
-   :rtype: string, unicode
+   :param str s: The input string
+   :return: The decorated string
+   :rtype: string
    :raises ValueError: if the message_body exceeds 160 characters
 
 
@@ -83,18 +82,15 @@ Styles:
    ``hg256`` will highlight input with the color.
 
    :param str hexrgb: The hex rgb color string, accept length 3 and 6. eg: ``555``, ``912D2B``
-   :param str s: The input string (or unicode)
-   :return: The decorated string (or unicode)
-   :rtype: string, unicode
+   :param str s: The input string
+   :return: The decorated string
+   :rtype: string
    :raises ValueError: If the input string's length not equal to 3 or 6.
 """
 
+from typing import Union, Any, Callable, Optional, Tuple, List, Dict
 import sys
 
-
-PY2 = sys.version_info.major == 2
-if not PY2:
-    unicode = str
 
 _use_color_no_tty = True
 
@@ -112,33 +108,22 @@ def use_color():
     return False
 
 
-def esc(*codes):
-    # type (...) -> Text
-    """Produces an ANSI escape code unicode from a list of integers
+def esc(*codes: str) -> str:
+    """Produces an ANSI escape code from a list of integers
     :rtype: text_type
     """
     return t_('\x1b[{}m').format(t_(';').join(t_(str(c)) for c in codes))
 
 
-def t_(b):
-    # type: (Union[bytes, Any]) -> Text
+def t_(b: Union[bytes, Any]) -> str:
     """ensure text type"""
-    if PY2:
-        if isinstance(b, str):
-            return b.decode('utf8')
-        return b
     if isinstance(b, bytes):
         return b.decode()
     return b
 
 
-def b_(t):
-    # type: (Union[Text, Any]) -> bytes
+def b_(t: Union[str, Any]) -> bytes:
     """ensure binary type"""
-    if PY2:
-        if isinstance(t, unicode):
-            return t.encode('utf8')
-        return t
     if isinstance(t, str):
         return t.encode()
     return t
@@ -148,7 +133,7 @@ def b_(t):
 # 8 bit Color
 ###############################################################################
 
-def make_color(start, end):
+def make_color(start: str, end: str) -> Callable[[str], str]:
     # type: (Text, Text) -> Callable
     def color_func(s):
         # type: (AnyStr) -> Text
@@ -214,10 +199,10 @@ blink = make_color(esc(5), esc(25))
 import re  # NOQA
 
 # Default color levels for the color cube
-CUBELEVELS = [0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff]
+CUBELEVELS: List[int] = [0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff]
 
 # Generate a list of midpoints of the above list
-SNAPS = [(x + y) / 2 for x, y in list(zip(CUBELEVELS, [0] + CUBELEVELS))[1:]]
+SNAPS: List[int] = [(x + y) / 2 for x, y in list(zip(CUBELEVELS, [0] + CUBELEVELS))[1:]]
 
 # Gray-scale range.
 _GRAYSCALE = [
@@ -246,12 +231,12 @@ _GRAYSCALE = [
     (0xe4, 254),
     (0xee, 255),
 ]
-GRAYSCALE = dict(_GRAYSCALE)
+GRAYSCALE: Dict[int, int] = dict(_GRAYSCALE)
 
-GRAYSCALE_POINTS = [i for i, _ in _GRAYSCALE]
+GRAYSCALE_POINTS: List[int] = [i for i, _ in _GRAYSCALE]
 
 
-def get_closest(v, l):
+def get_closest(v: int, l: list):
     return min(l, key=lambda x: abs(x - v))
 
 
@@ -268,7 +253,7 @@ class Memorize(dict):
         return result
 
 
-def memorize(func):
+def memorize(func: Callable) -> Callable:
     func._cache = {}
 
     def wrapper(*args, **kwargs):
@@ -286,8 +271,7 @@ def memorize(func):
 
 
 @memorize
-def rgb_to_xterm(r, g, b):
-    # type: (int, int, int) -> int
+def rgb_to_xterm(r: int, g: int, b: int) -> int:
     """ Converts RGB values to the nearest equivalent xterm-256 color.
     """
     if r == g == b:
@@ -301,8 +285,7 @@ def rgb_to_xterm(r, g, b):
 
 
 @memorize
-def hex_to_rgb(hx):
-    # type: (Text) -> Tuple[int, int, int]
+def hex_to_rgb(hx: str) -> Tuple[int, int, int]:
     hxlen = len(hx)
     if hxlen != 3 and hxlen != 6:
         raise ValueError('hx color must be of length 3 or 6')
@@ -312,10 +295,8 @@ def hex_to_rgb(hx):
     return tuple(parts)
 
 
-def make_256(start, end):
-    # type: (Text, Text) -> Callable
-    def rgb_func(rgb, s, x=None):
-        # type: (Union[tuple, AnyText], AnyStr, Union[None, Tuple[int, int, int]]) -> Text
+def make_256(start: str, end: str) -> Callable[[Union[tuple, str], str, Optional[Tuple[int, int, int]]], str]:
+    def rgb_func(rgb: Union[tuple, str], s: str, x: Optional[Tuple[int, int, int]] = None) -> str:
         """
         :param rgb: (R, G, B) tuple, or RRGGBB hex string
         """
