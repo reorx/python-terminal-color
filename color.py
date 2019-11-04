@@ -9,14 +9,14 @@ Usage
 >>> import color
 >>>
 >>> # 8-bit color
->>> print red('red') + green('green') + blue('blue')
->>> print bold(yellow('bold yellow')) + underline(cyan('underline cyan'))
->>> print magenta_hl('magenta highlight')
+>>> print(red('red') + green('green') + blue('blue'))
+>>> print(bold(yellow('bold yellow')) + underline(cyan('underline cyan')))
+>>> print(magenta_hl('magenta highlight'))
 >>>
 >>> # xterm 256 color
->>> print bg256('A9D5DE', fg256('276F86', 'Info!'))
->>> print bg256('E0B4B4', fg256('912D2B', 'Warning!'))
->>> print hl256('10a3a3', 'Teal')
+>>> print(bg256('A9D5DE', fg256('276F86', 'Info!')))
+>>> print(bg256('E0B4B4', fg256('912D2B', 'Warning!')))
+>>> print(hl256('10a3a3', 'Teal'))
 
 Note:
 
