@@ -92,6 +92,10 @@ Styles:
 import sys
 
 
+PY2 = sys.version_info.major == 2
+if not PY2:
+    unicode = str
+
 _use_color_no_tty = True
 
 
@@ -109,18 +113,35 @@ def use_color():
 
 
 def esc(*codes):
-    """Produces an ANSI escape code unicode from a list of integers"""
-    return u'\x1b[%sm' % (u';'.join([unicode(c) for c in codes]))
+    # type (...) -> Text
+    """Produces an ANSI escape code unicode from a list of integers
+    :rtype: text_type
+    """
+    return t_('\x1b[{}m').format(t_(';').join(t_(str(c)) for c in codes))
 
 
-def to_unicode(s):
-    utf8 = False
-    if isinstance(s, str):
-        utf8 = True
-        s = s.decode('utf8')
-    if not isinstance(s, unicode):
-        raise TypeError('either str or unicode is allowed')
-    return s, utf8
+def t_(b):
+    # type: (Union[bytes, Any]) -> Text
+    """ensure text type"""
+    if PY2:
+        if isinstance(b, str):
+            return b.decode('utf8')
+        return b
+    if isinstance(b, bytes):
+        return b.decode()
+    return b
+
+
+def b_(t):
+    # type: (Union[Text, Any]) -> bytes
+    """ensure binary type"""
+    if PY2:
+        if isinstance(t, unicode):
+            return t.encode('utf8')
+        return t
+    if isinstance(t, str):
+        return t.encode()
+    return t
 
 
 ###############################################################################
@@ -128,18 +149,14 @@ def to_unicode(s):
 ###############################################################################
 
 def make_color(start, end):
+    # type: (Text, Text) -> Callable
     def color_func(s):
+        # type: (AnyStr) -> Text
         if not use_color():
             return s
 
-        s, utf8 = to_unicode(s)
-
         # render
-        f = start + s + end
-
-        if utf8:
-            f = f.encode('utf8')
-        return f
+        return start + t_(s) + end
 
     return color_func
 
@@ -270,6 +287,7 @@ def memorize(func):
 
 @memorize
 def rgb_to_xterm(r, g, b):
+    # type: (int, int, int) -> int
     """ Converts RGB values to the nearest equivalent xterm-256 color.
     """
     if r == g == b:
@@ -284,49 +302,49 @@ def rgb_to_xterm(r, g, b):
 
 @memorize
 def hex_to_rgb(hx):
+    # type: (Text) -> Tuple[int, int, int]
     hxlen = len(hx)
     if hxlen != 3 and hxlen != 6:
         raise ValueError('hx color must be of length 3 or 6')
     if hxlen == 3:
-        hx = ''.join(i * 2 for i in hx)
-    parts = [int(h, 16) for h in re.split(r'(..)(..)(..)', hx)[1:4]]
+        hx = t_('').join(i * 2 for i in hx)
+    parts = [int(h, 16) for h in re.split(t_(r'(..)(..)(..)'), hx)[1:4]]
     return tuple(parts)
 
 
 def make_256(start, end):
+    # type: (Text, Text) -> Callable
     def rgb_func(rgb, s, x=None):
+        # type: (Union[tuple, AnyText], AnyStr, Union[None, Tuple[int, int, int]]) -> Text
+        """
+        :param rgb: (R, G, B) tuple, or RRGGBB hex string
+        """
         if not use_color():
             return s
 
-        s, utf8 = to_unicode(s)
+        t = t_(s)
 
         # render
-        if isinstance(rgb, tuple):
-            pass
-        elif isinstance(rgb, str):
-            rgb = hex_to_rgb(rgb)
-        else:
-            raise ValueError('rgb should be either tuple or str')
+        if not isinstance(rgb, tuple):
+            rgb = hex_to_rgb(t_(rgb))
         if x is not None:
             xcolor = x
         else:
             xcolor = rgb_to_xterm(*rgb)
 
-        tpl = start + u'{s}' + end
+        tpl = start + t_('{s}') + end
         f = tpl.format(
             x=xcolor,
-            s=s)
+            s=t)
 
-        if utf8:
-            f = f.encode('utf8')
         return f
 
     return rgb_func
 
 
-fg256 = make_256(esc(38, 5, '{x}'), esc(39))
-bg256 = make_256(esc(48, 5, '{x}'), esc(49))
-hl256 = make_256(esc(1, 38, 5, '{x}', 7), esc(27, 39, 22))
+fg256 = make_256(esc(38, 5, t_('{x}')), esc(39))
+bg256 = make_256(esc(48, 5, t_('{x}')), esc(49))
+hl256 = make_256(esc(1, 38, 5, t_('{x}'), 7), esc(27, 39, 22))
 
 _grayscale_xterm_codes = [int(i) for i, _ in _GRAYSCALE]
 grayscale = {(i - _grayscale_xterm_codes[0]): make_color(esc(38, 5, i), esc(39)) for i in _grayscale_xterm_codes}
