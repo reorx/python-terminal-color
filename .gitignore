@@ -17,3 +17,7 @@ docs/_build/
 
 # Others #
 .virtualenv
+.tox/
+htmlcov/
+.coverage
+.python-version
