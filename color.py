@@ -112,21 +112,7 @@ def esc(*codes: Union[int, str]) -> str:
     """Produces an ANSI escape code from a list of integers
     :rtype: text_type
     """
-    return t_('\x1b[{}m').format(t_(';').join(t_(str(c)) for c in codes))
-
-
-def t_(b: Union[bytes, Any]) -> str:
-    """ensure text type"""
-    if isinstance(b, bytes):
-        return b.decode()
-    return b
-
-
-def b_(t: Union[str, Any]) -> bytes:
-    """ensure binary type"""
-    if isinstance(t, str):
-        return t.encode()
-    return t
+    return '\x1b[{}m'.format(';'.join(str(c) for c in codes))
 
 
 ###############################################################################
@@ -139,7 +125,7 @@ def make_color(start, end: str) -> Callable[[str], str]:
             return s
 
         # render
-        return start + t_(s) + end
+        return start + s + end
 
     return color_func
 
